@@ -12,7 +12,7 @@ class PageController extends Controller
     public function about()
     {
         return view('a-propos', [
-            'auteur' => 'Prenom Nom',
+            'auteur' => 'Ben Rhouma maryem',
             'groupe' => 'MDW32',
         ]);
     }
