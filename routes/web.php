@@ -10,6 +10,7 @@ Route::get('/a-propos', [PageController::class, 'about'])->name('about');
 
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 
+Route::get('/heure', [PageController::class, 'time'])->name('time');
 
 Route::get('/heure', function () {
     return view('heure', [

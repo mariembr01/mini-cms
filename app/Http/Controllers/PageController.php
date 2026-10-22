@@ -16,5 +16,14 @@ class PageController extends Controller
             'groupe' => 'MDW32',
         ]);
     }
+
+    public function time()
+    {
+        return view('heure', [
+            'heure' => now()->format('H:i'),
+            'date' => now()->format('d/m/Y'),
+        ]);
+    }
 }
 return view('home');
+
