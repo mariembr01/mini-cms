@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\View\View;
+use App\Models\Tag;
 
 class PageController extends Controller
 {
@@ -20,6 +21,11 @@ class PageController extends Controller
             'categories' => Category::withCount(['posts' => fn (Builder $query) => $query->published()])
                 ->orderBy('name')
                 ->get(),
+            'tags' => Tag::withCount(['posts' => fn (Builder $query) => $query->published()])
+                ->orderByDesc('posts_count')
+                ->orderBy('name')
+                ->get()
+                ->filter(fn (Tag $tag) => $tag->posts_count > 0),   
         ]);
     }
 
