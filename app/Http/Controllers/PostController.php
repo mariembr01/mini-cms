@@ -10,6 +10,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use App\Models\Category;
+use App\Http\Requests\StorePostRequest;
 
 class PostController extends Controller
 {
@@ -61,18 +62,9 @@ class PostController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+       public function store(StorePostRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', 'regex:/^[a-z0-9-]+$/', 'unique:posts,slug'],
-            'excerpt' => ['nullable', 'string', 'max:255'],
-            'body' => ['required', 'string', 'min:20'],
-            'is_published' => ['nullable', 'boolean'],
-            'category_id' => ['nullable', 'integer', 'exists:categories,id'],
-            'tags' => ['nullable', 'array'],
-            'tags.*' => ['integer', 'exists:tags,id'],
-        ]);
+        $validated = $request->validated();
 
         $validated['is_published'] = $request->boolean('is_published');
         $validated['published_at'] = $validated['is_published'] ? now() : null;
