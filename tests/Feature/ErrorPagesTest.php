@@ -19,3 +19,12 @@ it('shows the styled 503 page when the site is read-only', function () {
         ->assertSee('Service momentanément indisponible')
         ->assertSee("Retour à l'accueil", false);
 });
+
+it('shows the category not found page with a list of categories', function () {
+    \App\Models\Category::factory()->create(['name' => 'Tutoriels', 'slug' => 'tutoriels']);
+
+    $this->get('/posts/categorie/inconnue')
+        ->assertNotFound()
+        ->assertSee('Catégorie introuvable')
+        ->assertSee('Tutoriels');
+});

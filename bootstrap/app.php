@@ -8,6 +8,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use App\Models\Category;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -33,6 +34,11 @@ return Application::configure(basePath: dirname(__DIR__))
             $previous = $e->getPrevious();
 
             if ($previous instanceof ModelNotFoundException && $previous->getModel() === Post::class) {
+                if ($previous instanceof ModelNotFoundException && $previous->getModel() === Category::class) {
+                    return response()->view('errors.categorie-introuvable', [
+                        'categories' => Category::orderBy('name')->get(),
+                    ], 404);
+            }
                 return response()->view('errors.article-introuvable', [
                     'recentPosts' => Post::published()
                         ->with('user', 'category', 'tags')
