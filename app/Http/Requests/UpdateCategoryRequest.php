@@ -23,4 +23,14 @@ class UpdateCategoryRequest extends FormRequest
             'slug' => ['required', 'string', 'max:255', Rule::unique('categories', 'slug')->ignore($this->route('category'))],
         ];
     }
+
+        /**
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'slug.unique' => 'Ce slug est déjà utilisé par une autre catégorie.',
+        ];
+    }
 }
