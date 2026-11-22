@@ -15,6 +15,10 @@ class EnsureUserIsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
+        if (! $request->user()?->isAdmin()) {
+            abort(403, 'Réservé aux administrateurs.');
+        }
+
         return $next($request);
     }
 }
