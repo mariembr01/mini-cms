@@ -6,12 +6,13 @@ Auteur : Ben rhouma maryem, groupe MDW32.
 
 Mini-CMS évoluera au fil du semestre vers une petite plateforme de publication : pages publiques, back-office authentifié, API JSON et tests Pest. Chaque session se termine par un tag Git (`lab-01`, `lab-01b`, puis un tag par session).
 
-## État actuel (tag lab-05b)
+## État actuel (tag lab-06)
 
-- Back-office des catégories et des tags sous `/admin` (`CategoryController`, `TagController`), protégé par le middleware `writable`, avec Form Requests et messages flash.
-- Messages de validation en français (`lang/fr/validation.php`, `APP_LOCALE=fr`), avec des noms de champs lisibles et un message propre au slug des catégories.
-- Pages 404 et 503 affichées dans le layout du site (`resources/views/errors`).
-- Tests Pest : `PostPagesTest`, `PostWriteTest`, `PostRelationsTest`, `PostTaxonomyTest`, `PostFeedbackTest`, `CategoryAdminTest` et `ErrorPagesTest`.
+- Authentification écrite à la main : inscription (`Hash::make`), connexion (`Auth::attempt`), déconnexion.
+- Écritures réservées aux utilisateurs connectés (middleware `auth`) ; chaque article a un auteur.
+- Colonne `role` (`author` ou `admin`), Gate `manage-categories` et `PostPolicy` (un auteur modifie ses articles, un administrateur tous).
+- Tests Pest : `AuthTest` et `AuthorizationTest`, en plus des suites précédentes.
+
 
 ## Données de démonstration
 
