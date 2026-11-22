@@ -11,6 +11,7 @@ use App\Models\Category;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
@@ -134,5 +135,16 @@ class PostController extends Controller
         ]);
 
         return redirect()->route('posts.show', $post)->with('success', $isPublished ? 'Article publié.' : 'Article dépublié.');
+    }
+
+    public function myPosts(Request $request): View
+    {
+        return view('posts.index', [
+            'heading' => 'Mes articles',
+            'posts' => $request->user()->posts()
+                ->with('user', 'category', 'tags')
+                ->latest('id')
+                ->paginate(4),
+        ]);
     }
 }

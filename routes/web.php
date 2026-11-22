@@ -40,5 +40,6 @@ Route::middleware('writable')->group(function () {
         });
     });
 
+    Route::get('/mes-articles', [PostController::class, 'myPosts'])->name('my-posts');
     Route::resource('posts', PostController::class)->only(['index', 'show']);
 });
