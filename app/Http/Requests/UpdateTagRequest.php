@@ -8,12 +8,17 @@ use Illuminate\Validation\Rule;
 
 class UpdateTagRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can('manage-tags');
     }
 
     /**
+     * Get the validation rules that apply to the request.
+     *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
@@ -21,16 +26,6 @@ class UpdateTagRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255', Rule::unique('tags', 'name')->ignore($this->route('tag'))],
             'slug' => ['required', 'string', 'max:255', Rule::unique('tags', 'slug')->ignore($this->route('tag'))],
-        ];
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    public function messages(): array
-    {
-        return [
-            'slug.unique' => 'Ce slug est déjà utilisé par un autre tag.',
         ];
     }
 }
