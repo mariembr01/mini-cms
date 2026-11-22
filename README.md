@@ -6,12 +6,13 @@ Auteur : Ben rhouma maryem, groupe MDW32.
 
 Mini-CMS évoluera au fil du semestre vers une petite plateforme de publication : pages publiques, back-office authentifié, API JSON et tests Pest. Chaque session se termine par un tag Git (`lab-01`, `lab-01b`, puis un tag par session).
 
-## État actuel (tag lab-06)
+## État actuel (tag lab-06b)
 
-- Authentification écrite à la main : inscription (`Hash::make`), connexion (`Auth::attempt`), déconnexion.
-- Écritures réservées aux utilisateurs connectés (middleware `auth`) ; chaque article a un auteur.
-- Colonne `role` (`author` ou `admin`), Gate `manage-categories` et `PostPolicy` (un auteur modifie ses articles, un administrateur tous).
-- Tests Pest : `AuthTest` et `AuthorizationTest`, en plus des suites précédentes.
+- Middleware `admin` (`App\Http\Middleware\EnsureUserIsAdmin`) sur tout `/admin` : un auteur reçoit 403 « Réservé aux administrateurs. ».
+- Gate `manage-tags`, comme `manage-categories` : contrôleur, Form Requests et menu.
+- Brouillons protégés : `PostPolicy::view` et le scope `visibleTo` ; un brouillon n'est visible que par son auteur et les administrateurs.
+- Tests d'autorisation : `AdminAccessTest` (7 tests) et `PostVisibilityTest` (5 tests), en plus des fichiers de la session 11.
+- Comparaison écrite avec le starter kit Livewire (section ci-dessous).
 
 
 ## Données de démonstration
@@ -173,3 +174,10 @@ Back-office des catégories et des tags, messages de validation en français, pa
 | Tests | `AuthTest`, `AuthorizationTest`, `AdminAccessTest`, `PostVisibilityTest` | 10 fichiers fournis (Auth, Settings, Dashboard) |
 
 Ce que je garderais du kit dans un vrai projet : la limitation des tentatives de connexion, le mot de passe oublié et la vérification de l'e-mail, car ce sont des mesures de sécurité que je ne veux pas réécrire. Je garderais mes propres Gates et Policies, car le kit n'écrit aucune règle d'autorisation.
+
+
+### Session 12
+
+![Page 403 « Réservé aux administrateurs. » pour un compte auteur sur /admin/tags](screenshots/s12-admin-interdit.png)
+
+![Barre de navigation d'un compte auteur, sans les liens Catégories et Tags](screenshots/s12-menu-auteur.png)
