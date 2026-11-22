@@ -155,3 +155,21 @@ Back-office des catégories et des tags, messages de validation en français, pa
 ![Formulaire de catégorie envoyé vide, avec les messages de validation en français](screenshots/s10-validation.png)
 
 ![Page 404 du site pour une adresse inconnue](screenshots/s10-404.png)
+
+
+## Comparaison avec le starter kit Livewire
+
+| Critère | Mini-CMS (authentification manuelle) | Starter kit Livewire |
+|---|---|---|
+| Routes d'authentification | `routes/web.php` : `/inscription`, `/connexion`, `/deconnexion` | Enregistrées par Fortify depuis son paquet, absentes de `routes/web.php` |
+| Inscription | `Auth\RegisterController` et `RegisterRequest` | `app/Actions/Fortify/CreateNewUser.php` et une vue Livewire |
+| Connexion | `Auth\LoginController::store` (`Auth::attempt`, `regenerate`) | Contrôleur de Fortify et une vue Livewire |
+| Déconnexion | `Auth\LoginController::destroy` (`logout`, `invalidate`, `regenerateToken`) | Route de Fortify, mêmes opérations dans `app/Livewire/Actions/Logout.php` |
+| Limitation des tentatives | Aucune | 5 tentatives par minute par e-mail et IP (`FortifyServiceProvider`) |
+| Mot de passe oublié | Absent | `Features::resetPasswords()` dans `config/fortify.php` |
+| Vérification de l'e-mail | Absente | `Features::emailVerification()` et middleware `verified` |
+| Double authentification | Absente | `Features::twoFactorAuthentication()` et passkeys |
+| Rôles et autorisations | Colonne `role`, Gates, `PostPolicy`, middleware `admin` | Aucun : à écrire soi-même |
+| Tests | `AuthTest`, `AuthorizationTest`, `AdminAccessTest`, `PostVisibilityTest` | 10 fichiers fournis (Auth, Settings, Dashboard) |
+
+Ce que je garderais du kit dans un vrai projet : la limitation des tentatives de connexion, le mot de passe oublié et la vérification de l'e-mail, car ce sont des mesures de sécurité que je ne veux pas réécrire. Je garderais mes propres Gates et Policies, car le kit n'écrit aucune règle d'autorisation.
