@@ -1,0 +1,10 @@
+[33m8c3ca83[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mnew-branch-name[m[33m)[m Ajouter le middleware admin
+[33m320c78a[m Tester les autorisations
+[33mbf03cb7[m Proteger les brouillons avec la PostPolicy
+[33m2cd0eb1[m Ajouter le Gate manage-tags
+[33mbdf7e14[m Ajouter le middleware admin
+[33m92fd943[m[33m ([m[1;33mtag: [m[1;33mlab-06[m[33m, [m[1;31mupstream/new-branch-name[m[33m)[m Document session 11 in README
+[33mca381b6[m Defi : mes articles et se souvenir de moi
+[33mc0062d1[m Ajouter la PostPolicy
+[33mca08f94[m Ajouter le Gate manage-categories
+[33m00e4a25[m Reserver les ecritures aux utilisateurs connectes
