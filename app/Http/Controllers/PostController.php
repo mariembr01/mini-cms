@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
+use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Arr;
-use Illuminate\View\View;
-use App\Models\Category;
-use App\Http\Requests\StorePostRequest;
-use App\Http\Requests\UpdatePostRequest;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\View\View;
 
 class PostController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
         return view('posts.index', [
             'heading' => 'Tous les articles',
-            'posts' => Post::with('user', 'category', 'tags')->latest('id')->paginate(4),
+            'posts' => Post::visibleTo($request->user())->with('user', 'category', 'tags')->latest('id')->paginate(4),
         ]);
     }
 
@@ -31,7 +31,7 @@ class PostController extends Controller
         ]);
     }
 
-        public function byCategory(Category $category): View
+    public function byCategory(Category $category): View
     {
         return view('posts.index', [
             'heading' => 'Catégorie : '.$category->name,
@@ -57,13 +57,15 @@ class PostController extends Controller
 
     public function create(): View
     {
+        Gate::authorize('create', Post::class);
+
         return view('posts.create', [
             'categories' => Category::orderBy('name')->get(),
             'tags' => Tag::orderBy('name')->get(),
         ]);
     }
 
-       public function store(StorePostRequest $request): RedirectResponse
+    public function store(StorePostRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -73,10 +75,13 @@ class PostController extends Controller
         $post = $request->user()->posts()->create(Arr::except($validated, ['tags']));
         $post->tags()->sync($validated['tags'] ?? []);
 
-        return redirect()->route('posts.show', $post)->with('success', 'Article créé.');    }
+        return redirect()->route('posts.show', $post)->with('success', 'Article créé.');
+    }
 
     public function show(Post $post): View
     {
+        Gate::authorize('view', $post);
+
         $post->load('user', 'category', 'tags');
 
         $related = $post->category
@@ -95,6 +100,7 @@ class PostController extends Controller
     public function edit(Post $post): View
     {
         Gate::authorize('update', $post);
+
         $post->load('tags');
 
         return view('posts.edit', [
@@ -120,13 +126,16 @@ class PostController extends Controller
     public function destroy(Post $post): RedirectResponse
     {
         Gate::authorize('delete', $post);
+
         $post->delete();
 
         return redirect()->route('posts.index')->with('success', 'Article supprimé.');
     }
-        public function togglePublication(Post $post): RedirectResponse
+
+    public function togglePublication(Post $post): RedirectResponse
     {
         Gate::authorize('update', $post);
+
         $isPublished = ! $post->is_published;
 
         $post->update([
@@ -135,16 +144,5 @@ class PostController extends Controller
         ]);
 
         return redirect()->route('posts.show', $post)->with('success', $isPublished ? 'Article publié.' : 'Article dépublié.');
-    }
-
-    public function myPosts(Request $request): View
-    {
-        return view('posts.index', [
-            'heading' => 'Mes articles',
-            'posts' => $request->user()->posts()
-                ->with('user', 'category', 'tags')
-                ->latest('id')
-                ->paginate(4),
-        ]);
     }
 }
