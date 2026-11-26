@@ -1,38 +1,23 @@
 <?php
 
-namespace App\Http\Controllers\Api;
-
-use App\Http\Controllers\Controller;
-use App\Http\Requests\LoginRequest;
-use App\Models\User;
-use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\PostController;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Route;
 
-class AuthController extends Controller
-{
-    public function login(LoginRequest $request): JsonResponse
-    {
-        $user = User::where('email', $request->validated('email'))->first();
+Route::get('/user', function (Request $request) {
+    return $request->user();
+})->middleware('auth:sanctum');
 
-        if ($user === null || ! Hash::check($request->validated('password'), $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => 'Ces identifiants ne correspondent à aucun compte.',
-            ]);
-        }
+Route::name('api.')->group(function () {
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
 
-        return response()->json([
-            'token' => $user->createToken('api')->plainTextToken,
-            'token_type' => 'Bearer',
-        ], 201);
-    }
+    Route::apiResource('posts', PostController::class)->only(['index', 'show']);
+    Route::apiResource('categories', CategoryController::class)->only(['index', 'show']);
 
-    public function logout(Request $request): Response
-    {
-        $request->user()->currentAccessToken()->delete();
-
-        return response()->noContent();
-    }
-}
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+        Route::apiResource('posts', PostController::class)->except(['index', 'show']);
+    });
+});
