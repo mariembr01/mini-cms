@@ -202,3 +202,67 @@ Ce que je garderais du kit dans un vrai projet : la limitation des tentatives de
 ![Postman : POST /api/posts avec un jeton Bearer, onglet Body, réponse 201 Created](screenshots/s14-postman-201.png)
 
 ![Postman : PUT sur l'article d'un autre auteur, réponse 403](screenshots/s14-postman-403.png)
+
+# Mini-CMS
+
+## Description
+
+## Fonctionnalités
+
+## Installation
+
+### Bash
+
+```bash
+git clone https://github.com/VOTRE-COMPTE/mini-cms.git
+cd mini-cms
+composer install
+npm install
+npm run build
+cp .env.example .env
+php artisan key:generate
+php artisan migrate:fresh --seed
+php artisan test
+composer run dev
+```
+
+### PowerShell
+
+```powershell
+git clone https://github.com/VOTRE-COMPTE/mini-cms.git
+cd mini-cms
+composer install
+npm install
+npm run build
+copy .env.example .env
+php artisan key:generate
+php artisan migrate:fresh --seed
+php artisan test
+composer run dev
+```
+
+## Comptes de test
+
+## API
+
+### Endpoints
+
+### Authentification par jeton
+
+### Codes d'erreur
+
+### Exemple curl.exe
+
+```bash
+curl.exe -X POST -H "Accept: application/json" -H "Authorization: Bearer VOTRE_JETON" http://localhost:8000/api/logout
+```
+
+## Captures d'écran
+
+## Choix d'architecture
+
+### Pourquoi les écritures de l'API passent par PostPolicy
+
+### Pourquoi preventLazyLoading est activé
+
+### Pourquoi l'API utilise des jetons et non la session
